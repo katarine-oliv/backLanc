@@ -112,7 +112,7 @@ public class FuncionarioDAO {
             while(this.resultSet.next()){
                 funcionario = new Funcionario();
                 funcionario.setId(id);
-                funcionario.setNome(this.resultSet.getString("nome_cliente"));
+                funcionario.setNome(this.resultSet.getString("nome_func"));
                 funcionario.setCargo(this.resultSet.getString("cargo"));
                 funcionario.setEmail(this.resultSet.getString("email_func"));
                 funcionario.setSenha(this.resultSet.getString("senha"));

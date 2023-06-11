@@ -19,7 +19,7 @@ public class UserDetailServiceCustomizado implements UserDetailsService {
         Usuario usuario = new UsuarioDAO().getUsuario(username);
 
         if(usuario == null){
-            throw  new UsernameNotFoundException("Usuário ou senha inválidos!");
+            throw  new UsernameNotFoundException("Email ou senha inválidos!");
         }else{
             UserDetails user = User.withUsername(usuario.getLogin())
                     .password(usuario.getSenha())
