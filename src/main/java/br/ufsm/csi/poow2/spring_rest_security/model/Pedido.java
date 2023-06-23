@@ -45,7 +45,7 @@ public class Pedido {
     }
 
     public java.sql.Date getData() {
-        return data;
+        return (java.sql.Date) data;
     }
 
     public void setData(Date data) {
