@@ -28,6 +28,9 @@ public class PedidoDAO {
                 pedido = new Pedido();
                 pedido.setId(resultSet.getInt("id_pedido"));
                 pedido.setQuantidade(resultSet.getInt("quantidade"));
+                pedido.setData(resultSet.getDate("data_pedido"));
+                pedido.setObservacao(resultSet.getString("observacao"));
+                pedido.setValorTotal(resultSet.getFloat("total_pedido"));
                 pedido.setCliente(new ClienteDAO().getCliente(resultSet.getInt("id_cliente")));
                 pedido.setProduto(new ProdutoDAO().getProduto(resultSet.getInt("id_produto")));
             }
@@ -42,12 +45,15 @@ public class PedidoDAO {
 
         try (Connection connection = new ConectaDBPostgres().getConexao()) {
 
-            this.sql = "INSERT INTO pedido (id_cliente, id_produto, quantidade) VALUES (?, ?, ?)";
+            this.sql = "INSERT INTO pedido (id_cliente, id_produto, quantidade, data_pedido, observacao, total_pedido) VALUES (?, ?, ?, ?, ?, ?)";
             System.out.println(pe.getId());
             this.preparedStatement = connection.prepareStatement(sql);
             this.preparedStatement.setInt(1, pe.getCliente().getId());
             this.preparedStatement.setInt(2,pe.getProduto().getId());
             this.preparedStatement.setInt(3, pe.getQuantidade());
+            this.preparedStatement.setDate(4, pe.getData());
+            this.preparedStatement.setString(5, pe.getObservacao());
+            this.preparedStatement.setFloat(6, pe.getValorTotal());
             this.preparedStatement.execute();
         }
         return pe;
@@ -64,6 +70,9 @@ public class PedidoDAO {
                 Pedido pedido = new Pedido();
                 pedido.setId(resultSet.getInt("id_pedido"));
                 pedido.setQuantidade(resultSet.getInt("quantidade"));
+                pedido.setData(resultSet.getDate("data_pedido"));
+                pedido.setObservacao(resultSet.getString("observacao"));
+                pedido.setValorTotal(resultSet.getFloat("total_pedido"));
                 pedido.setCliente(new ClienteDAO().getCliente(resultSet.getInt("id_cliente")));
                 pedido.setProduto(new ProdutoDAO().getProduto(resultSet.getInt("id_produto")));
                 pedidos.add(pedido);
@@ -81,12 +90,15 @@ public class PedidoDAO {
 
     public String editarPedido(Pedido pedido){
         try(Connection connection = new ConectaDBPostgres().getConexao()){
-            this.sql= "UPDATE pedido SET id_cliente=?, id_produto=?, quantidade=? WHERE id_pedido= ?";
+            this.sql= "UPDATE pedido SET id_cliente=?, id_produto=?, quantidade=?, data_pedido=?, observacao=?, total_pedido=? WHERE id_pedido= ?";
             this.preparedStatement= connection.prepareStatement(sql);
             this.preparedStatement.setInt(1, pedido.getCliente().getId());
             this.preparedStatement.setInt(2, pedido.getProduto().getId());
             this.preparedStatement.setInt(3, pedido.getQuantidade());
-            this.preparedStatement.setInt(4, pedido.getId());
+            this.preparedStatement.setDate(4, pedido.getData());
+            this.preparedStatement.setString(5, pedido.getObservacao());
+            this.preparedStatement.setFloat(6, pedido.getValorTotal());
+            this.preparedStatement.setInt(7, pedido.getId());
             this.preparedStatement.executeUpdate();
             if(this.preparedStatement.getUpdateCount() > 0){
                 this.status= "Pedido editado com sucesso!";
@@ -98,30 +110,6 @@ public class PedidoDAO {
 
         return this.status;
     }
-
-//    public Pedido buscarPedido(int id){
-//        Pedido pedido= null;
-//        try(Connection connection = new ConectaDBPostgres().getConexao()){
-//            this.sql = "SELECT * FROM pedido WHERE id_pedido= ?";
-//            this.preparedStatement= connection.prepareStatement(sql);
-//            this.preparedStatement.setInt(1, id);
-//            this.resultSet= this.preparedStatement.executeQuery();
-//            while(this.resultSet.next()){
-//                pedido = new Pedido();
-//                pedido.setId(id);
-//                pedido.setCliente(this.resultSet.getInt("id_cliente"));
-//                pedido.setItem(this.resultSet.getString("id_item"));
-//                pedido.setTotal(this.resultSet.getFloat("total_pedido"));
-//
-//            }
-//
-//        }catch (SQLException e){
-//            e.printStackTrace();
-//            this.status= "error";
-//        }
-//
-//        return pedido;
-//    }
 
     public void excluirPedido(int id){
         try (Connection connection = new ConectaDBPostgres().getConexao()){
