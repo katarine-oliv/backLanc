@@ -23,7 +23,9 @@ public class ClienteDAO {
             this.preparedStatement = connection.prepareStatement(this.sql);
             this.preparedStatement.setInt(1, id_cliente);
             this.resultSet = this.preparedStatement.executeQuery();
+
             System.out.println(this.sql);
+
             while (resultSet.next()){
                 cliente = new Cliente();
                 cliente.setId(resultSet.getInt("id_cliente"));

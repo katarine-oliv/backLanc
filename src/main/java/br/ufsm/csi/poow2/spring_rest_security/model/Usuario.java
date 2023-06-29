@@ -20,9 +20,8 @@ public class Usuario {
     }
 
 
-
-
-
+    public Usuario() {
+    }
 
     public Usuario(String login, String senha, String permissao) {
         this.login = login;

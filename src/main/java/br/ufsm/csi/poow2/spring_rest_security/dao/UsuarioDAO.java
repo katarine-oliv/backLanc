@@ -1,5 +1,6 @@
 package br.ufsm.csi.poow2.spring_rest_security.dao;
 
+import br.ufsm.csi.poow2.spring_rest_security.model.Cliente;
 import br.ufsm.csi.poow2.spring_rest_security.model.Usuario;
 
 import java.sql.Connection;
@@ -16,24 +17,25 @@ public class UsuarioDAO {
     private ResultSet resultSet;
 
     public Usuario getUsuario(String username) {
+
+            Usuario usuario = null;
+
         try (Connection connection = new ConectaDBPostgres().getConexao()){
             this.sql = "SELECT * FROM usuario WHERE email = ?";
             this.preparedStatement = connection.prepareStatement(this.sql);
             this.preparedStatement.setString(1, username);
             this.resultSet = this.preparedStatement.executeQuery();
 
-            while (this.resultSet.next()){
-                String login = this.resultSet.getString("email");
-                String senha = this.resultSet.getString("senha");
-                String permissao = "ADMIN";
-
-                Usuario user = new Usuario(login, new BCryptPasswordEncoder().encode(senha), permissao);
-
-                return user;
+            while (resultSet.next()){
+                usuario = new Usuario();
+                usuario.setLogin(resultSet.getString("email"));
+                usuario.setSenha(resultSet.getString("senha"));
+                usuario.setPermissao(resultSet.getString("permissao"));
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return usuario;
     }
 }
