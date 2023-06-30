@@ -1,5 +1,6 @@
 package br.ufsm.csi.poow2.spring_rest_security.controller;
 
+import br.ufsm.csi.poow2.spring_rest_security.dao.UsuarioDAO;
 import br.ufsm.csi.poow2.spring_rest_security.model.Usuario;
 import br.ufsm.csi.poow2.spring_rest_security.security.JWTUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,11 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseEntity<Object> autenticacao(@RequestBody Usuario usuario){
 
+
+
         System.out.println("login: "+usuario.getLogin());
         System.out.println("senha: "+usuario.getSenha());
+        System.out.println("permissao: "+usuario.getPermissao());
         try{
                 final Authentication authentication = this.authenticationManager
                         .authenticate(new UsernamePasswordAuthenticationToken(usuario.getLogin(), usuario.getSenha()));
@@ -34,7 +38,7 @@ public class LoginController {
                     //colocamos nossa instancia autenticada no contexto do spring security
                     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-                    System.out.println("Gerando token de autorizacao ****");
+                    System.out.println("Gerando token de autorizacao...");
                    String token = new JWTUtil().geraToken(usuario);
 
                    usuario.setToken(token);

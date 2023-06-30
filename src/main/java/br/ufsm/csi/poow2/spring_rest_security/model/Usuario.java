@@ -1,7 +1,5 @@
 package br.ufsm.csi.poow2.spring_rest_security.model;
 
-import lombok.Data;
-
 
 public class Usuario {
 
@@ -21,9 +19,6 @@ public class Usuario {
 
 
     public Usuario() {
-    }
-
-    public Usuario(String login, String senha, String permissao) {
         this.login = login;
         this.senha = senha;
         this.permissao = permissao;
