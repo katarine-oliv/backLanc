@@ -1,7 +1,7 @@
 package br.ufsm.csi.poow2.spring_rest_security.security;
 
-import br.ufsm.csi.poow2.spring_rest_security.dao.UsuarioDAO;
-import br.ufsm.csi.poow2.spring_rest_security.model.Usuario;
+import br.ufsm.csi.poow2.spring_rest_security.dao.FuncionarioDAO;
+import br.ufsm.csi.poow2.spring_rest_security.model.Funcionario;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,18 +14,18 @@ public class UserDetailServiceCustomizado implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        System.out.println("username: "+username);
 
-        Usuario usuario = new UsuarioDAO().getUsuario(username);
+        Funcionario funcionario= new FuncionarioDAO().getUser(username);
+        System.out.println("detailservice"+funcionario.getEmail_func());
+        System.out.println("detailservice"+funcionario.getCargo());
 
-        if(usuario == null){
-            throw  new UsernameNotFoundException("Email ou senha inválidos!");
-        }else{
-            UserDetails user = User.withUsername(usuario.getLogin())
-                    .password(usuario.getSenha())
-                    .authorities(usuario.getPermissao()).build();
+        if (funcionario == null){
+            throw new UsernameNotFoundException("Usuário ou senha incorretos!");
+        }else {
+            UserDetails user = User.withUsername(funcionario.getEmail_func()).password(funcionario.getSenha()).authorities(funcionario.getCargo()).build();
             return user;
         }
+
     }
 
 

@@ -1,12 +1,11 @@
 package br.ufsm.csi.poow2.spring_rest_security.security;
 
-import br.ufsm.csi.poow2.spring_rest_security.model.Usuario;
-
 import java.time.Duration;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import br.ufsm.csi.poow2.spring_rest_security.model.Funcionario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -17,19 +16,17 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JWTUtil {
 
-    public static final long TEMPO_VIDA = Duration.ofSeconds(800).toMillis();
+    public static final long TEMPO_VIDA = Duration.ofSeconds(10000).toMillis();
 
-    public String geraToken(Usuario usuario){
+    public String geraToken(Funcionario funcionario){
+        System.out.println("JWT UTIL:"+funcionario.getCargo());
 
-        final Map<String, Object> claims = new HashMap<>();
-        claims.put("sub", usuario.getLogin());
-        claims.put("permissoes: ", usuario.getPermissao());
+        final Map<String,Object> claims = new HashMap<>();
+        claims.put("sub",funcionario.getEmail());
+        claims.put("permissoes: ",funcionario.getCargo());
 
-        return Jwts.builder()
-                .setClaims(claims)
-                .setExpiration(new Date(System.currentTimeMillis()+this.TEMPO_VIDA))
-                .signWith(SignatureAlgorithm.HS256, "poow2")
-                .compact();
+        return Jwts.builder().setClaims(claims).setExpiration(new Date(System.currentTimeMillis()+this.TEMPO_VIDA))
+                .signWith(SignatureAlgorithm.HS256,"poow2").compact();
     }
 
     public String getUsernameToken(String token){
@@ -41,20 +38,13 @@ public class JWTUtil {
     }
 
     public boolean isTokenExpirado(String token){
-
-        if(token !=null){
-            return this.parseToken(token).getExpiration().before(new Date());
-        }else{
-            return false;
-        }
+        return this.parseToken(token).getExpiration().before(new Date());
     }
 
-    private Claims parseToken(String token){
+    public Claims parseToken(String token){
         return Jwts.parser()
                 .setSigningKey("poow2")
                 .parseClaimsJws(token.replace("Bearer", ""))
                 .getBody();
     }
-
-
 }

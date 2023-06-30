@@ -26,9 +26,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService userDetailsService;
 
     @Autowired
-    public void configureAutenticacao(AuthenticationManagerBuilder auth) throws Exception{
-        System.out.println("Configurando o AuthenticationManager ****");
-        auth.userDetailsService(this.userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+    public void configureAutenticacao(AuthenticationManagerBuilder builder) throws Exception{
+        System.out.println("Configurando o AuthenticationManager...");
+        builder.userDetailsService(this.userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
     }
 
     @Bean
@@ -50,24 +50,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
               //  .authenticationProvider(this.authProvider())
                 .authorizeHttpRequests()
-                .antMatchers(HttpMethod.GET, "/").permitAll()
+                //.antMatchers(HttpMethod.GET, "/").permitAll()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
 
-                .antMatchers(HttpMethod.GET,"/cliente").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST,"/cliente/save").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/cliente/clientes").hasAnyAuthority("USER", "ADMIN")
 
-                .antMatchers(HttpMethod.GET,"/produto").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST,"/produto/save").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/produto/produtos").hasAnyAuthority("USER", "ADMIN")
+                //Clientes
+                .antMatchers(HttpMethod.GET,"/cliente").hasAnyAuthority("administrador", "funcionario")
+                .antMatchers(HttpMethod.POST,"/cliente/save").hasAnyAuthority("administrador", "funcionario")
+                .antMatchers(HttpMethod.GET, "/cliente/clientes").hasAnyAuthority("administrador", "funcionario")
 
-                .antMatchers(HttpMethod.GET,"/pedido").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.POST,"/pedido/save").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(HttpMethod.GET, "/pedido/pedidos").hasAnyAuthority("USER", "ADMIN")
+                //Produtos
+                .antMatchers(HttpMethod.GET,"/produto").hasAnyAuthority("administrador", "funcionario")
+                .antMatchers(HttpMethod.POST,"/produto/save").hasAnyAuthority("administrador", "funcionario")
+                .antMatchers(HttpMethod.GET, "/produto/produtos").hasAnyAuthority("administrador", "funcionario")
 
-                .antMatchers(HttpMethod.GET,"/funcionario/funcionario").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.POST,"/funcionario/save").hasAnyAuthority("ADMIN")
-                .antMatchers(HttpMethod.GET, "/funcionario/funcionarios").hasAnyAuthority("ADMIN");
+                //Pedidos
+                .antMatchers(HttpMethod.GET,"/pedido").hasAnyAuthority("administrador", "funcionario")
+                .antMatchers(HttpMethod.POST,"/pedido/save").hasAnyAuthority("administrador", "funcionario")
+                .antMatchers(HttpMethod.GET, "/pedido/pedidos").hasAnyAuthority("administrador", "funcionario")
+
+                //Funcionarios
+                .antMatchers(HttpMethod.GET, "/funcionario/ver/{id}").permitAll()
+                .antMatchers(HttpMethod.GET,"/funcionario").hasAnyAuthority("administrador")
+                .antMatchers(HttpMethod.GET, "/funcionario/funcionarios").hasAnyAuthority("administrador")
+                .antMatchers(HttpMethod.POST,"/funcionario/save").hasAnyAuthority("administrador")
+                .antMatchers(HttpMethod.PUT, "/funcionario/editar").hasAnyAuthority("administrador")
+                .antMatchers(HttpMethod.DELETE, "/funcionario/excluir/{id}").hasAnyAuthority("administrador");
 
             http.addFilterBefore(this.filtroAutenticacao(), UsernamePasswordAuthenticationFilter.class);
 
@@ -89,3 +97,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 }
+
