@@ -30,7 +30,7 @@ public class FuncionarioController {
 
 
         try{
-            Funcionario funcionario1=new FuncionarioDAO().getUsuariobyemail(funcionario.getEmail_func());
+            Funcionario funcionario1=new FuncionarioDAO().getUsuariobyemail(funcionario.getId_func());
             System.out.println("O cargo pelo email:"+funcionario1.getCargo());
             System.out.println("O cargo pelo email:"+funcionario1.getId_func());
 
@@ -81,19 +81,18 @@ public class FuncionarioController {
     }
 
     @PutMapping("/editar")
-    public editarFuncionario(@RequestBody Funcionario funcionario){
+    public Funcionario editarFuncionario(@RequestBody Funcionario funcionario){
         System.out.println("Nome do funcionario editado:"+funcionario.getNome_func());
        return new FuncionarioDAO().editarFuncionario(funcionario);
     }
 
     @DeleteMapping("/excluir/{id}")
-    public excluirFuncionario(@PathVariable("id") int id){
+    public Funcionario excluirFuncionario(@PathVariable("id") int id){
         return new FuncionarioDAO().excluirFuncionario(id);
     }
 
     @GetMapping("/funcionario")
     public Funcionario funcionario(){
-
         return null;
     }
 

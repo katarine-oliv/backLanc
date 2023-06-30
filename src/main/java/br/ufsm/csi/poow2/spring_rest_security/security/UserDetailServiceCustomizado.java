@@ -15,7 +15,7 @@ public class UserDetailServiceCustomizado implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Funcionario funcionario= new FuncionarioDAO().getUser(username);
+        Funcionario funcionario= new FuncionarioDAO().getUser(Integer.parseInt(username));
         System.out.println("detailservice"+funcionario.getEmail_func());
         System.out.println("detailservice"+funcionario.getCargo());
 
