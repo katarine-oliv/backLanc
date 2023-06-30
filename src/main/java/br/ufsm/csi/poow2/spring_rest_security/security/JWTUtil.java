@@ -22,7 +22,7 @@ public class JWTUtil {
         System.out.println("JWT UTIL:"+funcionario.getCargo());
 
         final Map<String,Object> claims = new HashMap<>();
-        claims.put("sub",funcionario.getEmail());
+        claims.put("sub",funcionario.getEmail_func());
         claims.put("permissoes: ",funcionario.getCargo());
 
         return Jwts.builder().setClaims(claims).setExpiration(new Date(System.currentTimeMillis()+this.TEMPO_VIDA))
@@ -42,9 +42,11 @@ public class JWTUtil {
     }
 
     public Claims parseToken(String token){
+        String cleanToken = token != null ? token.replace("Bearer", "") : null;
         return Jwts.parser()
                 .setSigningKey("poow2")
-                .parseClaimsJws(token.replace("Bearer", ""))
+                .parseClaimsJws(cleanToken)
                 .getBody();
     }
+
 }
